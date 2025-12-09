@@ -11,7 +11,7 @@ import { LayoutDashboard, Package, ShoppingBag, Settings, Users, BarChart3, Stor
 export function DashboardSidebar() {
     const pathname = usePathname()
     const { data: session } = useSession()
-    const role = (session?.user as any)?.role || 'VENDOR' // Default to Vendor for dev/demo if undefined, though auth should provide it.
+    const role = (session?.user as any)?.role || 'VENDOR'
 
     // In real app, check role from session. For now, we simulate based on URL path or session.
     // Actually, let's derive links based on current path segment to show relevant dashboard sidebar?
