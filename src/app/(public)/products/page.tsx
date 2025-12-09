@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -32,7 +32,7 @@ import { ProductBreadcrumb } from '@/components/breadcrumb-nav'
 const CATEGORIES = ['Electronics', 'Fashion', 'Home & Garden', 'Books', 'Beauty', 'Sports', 'Automotive'];
 const BRANDS = ['Sony', 'Nike', 'Samsung', 'Adidas', 'Apple', 'Generic'];
 
-export default function ProductsPage() {
+function ProductsContent() {
     const searchParams = useSearchParams()
     const initialSearchString = searchParams.get('search') || ''
     const [searchQuery, setSearchQuery] = useState(initialSearchString)
@@ -425,5 +425,31 @@ function EmptyState({ onReset }: { onReset: () => void }) {
                 Clear Filters & Reset
             </Button>
         </div>
+    )
+}
+
+export default function ProductsPage() {
+    return (
+        <Suspense fallback={
+            <div className="container py-6 min-h-screen">
+                <ProductBreadcrumb />
+                <div className="space-y-4 mt-8">
+                    <Skeleton className="h-10 w-48" />
+                    <Skeleton className="h-4 w-96" />
+                    <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-10 mt-8">
+                        <div className="hidden lg:block space-y-6">
+                            <Skeleton className="h-64 w-full rounded-xl" />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                            {[...Array(6)].map((_, i) => (
+                                <ProductCardSkeleton key={i} />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }>
+            <ProductsContent />
+        </Suspense>
     )
 }
